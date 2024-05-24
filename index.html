@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css" integrity="sha384-xOolHFLEh07PJGoPkLv1IbcEPTNtaed2xpHsD9ESMhqIYd0nLMwNLD69Npy4HI+N" crossorigin="anonymous" />
+
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js" integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.min.js" integrity="sha384-+sLIOodYLS7CIrQpBjl+C7nPvqq+FbNUBDunl/OZv93DB7Ln/533i8e/mZXLi/P+" crossorigin="anonymous"></script>
+  <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+  <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
+
+
+  <script src="vue.js"></script>
+  <script src="axios.min.js"></script>
+
+  <title>Hotdog Perrones</title>
+
+  <style>
+    body {
+      background-color: #d84e4e;
+      color: white;
+      font-size: xx-large;
+    }
+
+    button {
+      background-color: white;
+      color: black;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container mt-5" id="app">
+    <div class="text-center">
+      <img class="animate__animated animate__bounce" src="logo.png" width="50%" alt="">
+    </div>
+
+    <form>
+      <div data-aos="fade-right" class="form-group">
+        <label for="exampleText">Hola, quien comerá rico?</label>
+        <input type="text" style="font-size: 4rem;" class="form-control mb-5" id="nombre" v-model="nombre" placeholder="pon tu nombre..." />
+      </div>
+
+      <div data-aos="fade-right" class="form-group">
+        <label for="exampleIncremental">¿Cuántos 🧅perrones🧅 te ponemos?</label>
+
+        <div class="input-group">
+          <div class="input-group-prepend">
+            <button style="width: 100px; font-weight: bolder; font-size: xx-large" @click="decrementarPerrones()" class="btn btn-outline-light" type="button">
+              -
+            </button>
+          </div>
+
+          <input type="text" readonly style="height: 250px; font-size: 50px; text-align: center" class="form-control" v-model="perrones" min="0" max="15" />
+
+          <div class="input-group-append">
+            <button style="width: 100px; font-weight: bolder; font-size: xx-large" @click="incrementarPerrones()" class="btn btn-outline-light" type="button">
+              +
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <br />
+      <hr style="color: white; background-color: white; height: 5px" />
+
+      <div data-aos="fade-right" class="form-group mt-5">
+        <label for="exampleIncremental">
+          ¿Cuántos 🍅tradicionales🌭 te ponemos?</label>
+
+        <div class="input-group">
+          <div class="input-group-prepend">
+            <button style="width: 150px; font-weight: bolder; font-size: xx-large" @click="decrementarTradicional()" class="btn btn-outline-light" type="button">
+              -
+            </button>
+          </div>
+
+          <input type="text" readonly style="height: 250px; font-size: 50px; text-align: center" class="form-control" v-model="tradicionales" min="0" max="15" />
+
+          <div class="input-group-append">
+            <button style="width: 150px; font-weight: bolder; font-size: xx-large" @click="incrementarTradicional()" class="btn btn-outline-light" type="button">
+              +
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <div data-aos="fade-right" class="form-group">
+        <label for="exampleText">Indicaciones adicionales</label>
+
+        <textarea class="form-control" rows="3" v-model="indicaciones"></textarea>
+      </div>
+
+
+      <div data-aos="fade-right" class="card" style="width: 100%; color:black;">
+        <ul class="list-group list-group-flush">
+          <li class="list-group-item">Mi resumen del pedido</li>
+          <li class="list-group-item">{{nombre}}</li>
+          <li class="list-group-item">Perones: {{perrones}}</li>
+          <li class="list-group-item">Tradicionales: {{tradicionales}}</li>
+          <li class="list-group-item">Indicaciones: {{indicaciones}}</li>
+        </ul>
+      </div>
+
+      <a :href="`https://wa.me/+50376665340/?text=${urlexterna}`" target="_blank" class="btn btn-success btn-block my-5 py-3">Hacer mi pedido</a>
+    </form>
+  </div>
+
+  <script>
+    let app = new Vue({
+      el: "#app",
+      data: {
+        perrones: 0,
+        tradicionales: 0,
+        nombre: "",
+        indicaciones: "",
+        busqueda: "",
+      },
+      methods: {
+        decrementarPerrones() {
+          if (this.perrones > 0) {
+            this.perrones--;
+          }
+        },
+        incrementarPerrones() {
+          if (this.perrones < 15) {
+            this.perrones++
+          }
+        },
+        decrementarTradicional() {
+          if (this.tradicionales > 0) {
+            this.tradicionales--;
+          }
+        },
+        incrementarTradicional() {
+          if (this.tradicionales < 15) {
+            this.tradicionales++;
+          }
+        },
+
+
+        jclear(d) {
+          return JSON.parse(JSON.stringify(d));
+        },
+      },
+      computed: {
+        urlexterna(){
+          let pedido = this.nombre
+          if(this.perrones>0){
+            pedido+=" - perrones:"+this.perrones
+          }
+          if(this.tradicionales>0){
+            pedido+=" - tradicionales:"+this.tradicionales
+          }
+          if(this.indicaciones!=''){
+            pedido+=" Indicaciones: "+this.indicaciones
+          }
+          
+          return pedido
+        }
+      },
+      mounted() {},
+    });
+  </script>
+  <script>
+    AOS.init();
+  </script>
+
+</body>
+
+</html>
